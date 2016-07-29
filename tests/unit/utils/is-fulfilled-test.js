@@ -7,6 +7,8 @@ import { module, test } from 'qunit';
 module('Unit | Utils | is fulfilled');
 
 test('Ember Promise proxy mixin detects its fulfilled', function(assert) {
+  assert.expect(3);
+
   let deferred = Ember.RSVP.defer();
   let promiseObject = DS.PromiseObject.create({ promise: deferred.promise });
 
@@ -16,12 +18,17 @@ test('Ember Promise proxy mixin detects its fulfilled', function(assert) {
 
   deferred.resolve(true);
 
+  let done = assert.async();
+
   deferred.promise.then(() => {
     assert.equal(isFulfilled(promiseObject), true);
+    done();
   });
 });
 
 test('RSVP Promise mixin detects its fulfilled', function(assert) {
+  assert.expect(3);
+
   let deferred = Ember.RSVP.defer();
 
   assert.ok(isPromise(deferred.promise));
@@ -30,12 +37,17 @@ test('RSVP Promise mixin detects its fulfilled', function(assert) {
 
   deferred.resolve(true);
 
+  let done = assert.async();
+
   deferred.promise.then(() => {
     assert.equal(isFulfilled(deferred.promise), true);
+    done();
   });
 });
 
 test('Duck typed promise cant detect fulfilled', function(assert) {
+  assert.expect(4);
+
   let promise = {
     then() { this.done = true; },
     catch() {},

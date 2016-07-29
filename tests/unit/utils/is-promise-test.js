@@ -6,6 +6,8 @@ import { module, test } from 'qunit';
 module('Unit | Utils | is promise');
 
 test('Ember Promise Proxy mixin is detected', function(assert) {
+  assert.expect(1);
+
   let deferred = Ember.RSVP.defer();
   let promiseObject = DS.PromiseObject.create({ promise: deferred.promise });
 
@@ -13,12 +15,16 @@ test('Ember Promise Proxy mixin is detected', function(assert) {
 });
 
 test('RSVP Promise mixin is detected', function(assert) {
+  assert.expect(1);
+
   let deferred = Ember.RSVP.defer();
 
   assert.ok(isPromise(deferred.promise));
 });
 
 test('Duck typed promise is detected', function(assert) {
+  assert.expect(1);
+
   let promise = { then() {}, catch() {} };
 
   assert.ok(isPromise(promise));

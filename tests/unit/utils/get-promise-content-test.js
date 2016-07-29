@@ -8,6 +8,8 @@ import { module, test } from 'qunit';
 module('Unit | Utils | get promise content');
 
 test('Ember Promise Proxymixin gets fulfilled content', function(assert) {
+  assert.expect(4);
+
   let deferred = Ember.RSVP.defer();
   let promiseObject = DS.PromiseObject.create({ promise: deferred.promise });
 
@@ -17,13 +19,18 @@ test('Ember Promise Proxymixin gets fulfilled content', function(assert) {
 
   deferred.resolve('done');
 
+  let done = assert.async();
+
   deferred.promise.then(() => {
     assert.equal(isFulfilled(promiseObject), true);
     assert.equal(getPromiseContent(promiseObject), 'done');
+    done();
   });
 });
 
 test('RSVP Promise mixin gets fulfilled content', function(assert) {
+  assert.expect(4);
+
   let deferred = Ember.RSVP.defer();
 
   assert.ok(isPromise(deferred.promise));
@@ -32,14 +39,19 @@ test('RSVP Promise mixin gets fulfilled content', function(assert) {
 
   deferred.resolve('done');
 
+  let done = assert.async();
+
   deferred.promise.then(() => {
     assert.equal(isFulfilled(deferred.promise), true);
     assert.equal(getPromiseContent(deferred.promise), 'done');
+    done();
   });
 });
 
 
 test('Duck typed promise cant get fulfilled content', function(assert) {
+  assert.expect(6);
+
   let promise = {
     then(result) {
       this.done = true;

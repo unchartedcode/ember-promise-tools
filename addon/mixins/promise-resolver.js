@@ -5,13 +5,15 @@ import getPromiseContent from 'ember-promise-tools/utils/get-promise-content';
 
 // Code referenced from https://github.com/fivetanley/ember-promise-helpers
 export default Ember.Mixin.create({
-  resolvePromise(maybePromise, immediateResolve, delayedResolve) {
+  resolvePromise(maybePromise, immediateResolve, delayedResolve, catchResolve) {
     if (!isPromise(maybePromise)) {
+      this.clearPromise();
       return immediateResolve.call(this, maybePromise);
     }
     // If we've already fulfilled, just return to avoid returning null
     // Probably could tie into SetValue, something to think about later
     if (isFulfilled(maybePromise)) {
+      this.clearPromise();
       return immediateResolve.call(this, getPromiseContent(maybePromise));
     }
 
@@ -32,18 +34,25 @@ export default Ember.Mixin.create({
           return (delayedResolve || immediateResolve).call(this, value);
         }
       }).catch((error) => {
-        Ember.Logger.error('Promise died in Semantic-UI-Ember promise-resolver');
-        Ember.Logger.error(error);
+        if (catchResolve != null) {
+          return catchResolve.call(this, error);
+        } else {
+          Ember.Logger.error('Promise died in promise-resolver and no catchResolve method was passed in.');
+          Ember.Logger.error(error);
+        }
       });
     });
     return null;
   },
 
   ensureLatestPromise(promise, callback) {
+    this.clearPromise(promise);
+    callback.call(this, Ember.RSVP.Promise.resolve(promise));
+  },
+
+  clearPromise(promise = null) {
     // It's a new promise, reset
     this._promiseWasSettled = false;
     this._currentPromise = promise;
-
-    callback.call(this, Ember.RSVP.Promise.resolve(promise));
   }
 });
