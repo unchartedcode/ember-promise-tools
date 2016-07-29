@@ -1,7 +1,7 @@
 {
   "name": "ember-promise-tools",
-  "version": "0.0.0",
-  "description": "The default blueprint for ember-cli addons.",
+  "version": "1.0.0",
+  "description": "A collection of tools to deal with promises easier.",
   "directories": {
     "doc": "doc",
     "test": "tests"
