@@ -1,8 +1,9 @@
-import Ember from 'ember';
+import { Promise } from 'rsvp';
+import PromiseProxyMixin from '@ember/object/promise-proxy-mixin';
 
 // It's assumed if you call this method, it was previously checked that it is a promise
 export default function(promise) {
-  if (Ember.PromiseProxyMixin.detect(promise)) {
+  if (PromiseProxyMixin.detect(promise)) {
     if (promise.get('isFulfilled')) {
       return true;
     }
@@ -10,7 +11,7 @@ export default function(promise) {
     return false;
   }
 
-  if (promise instanceof Ember.RSVP.Promise) {
+  if (promise instanceof Promise) {
     if (promise._state === 1) { // Fulfilled
       return true;
     }

@@ -1,13 +1,14 @@
-import Ember from 'ember';
+import { Promise } from 'rsvp';
+import PromiseProxyMixin from '@ember/object/promise-proxy-mixin';
 
 // It's assumed if you call this method, it was previously checked that it was a promise
 // and is fulfilled
 export default function(promise) {
-  if (Ember.PromiseProxyMixin.detect(promise)) {
+  if (PromiseProxyMixin.detect(promise)) {
     return promise.get('content');
   }
 
-  if (promise instanceof Ember.RSVP.Promise) {
+  if (promise instanceof Promise) {
     return promise._result;
   }
 

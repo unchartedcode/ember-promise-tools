@@ -1,4 +1,4 @@
-import Ember from 'ember';
+import { defer } from 'rsvp';
 import DS from 'ember-data';
 import smartResolve from 'ember-promise-tools/utils/smart-resolve';
 import { module, test } from 'qunit';
@@ -18,7 +18,7 @@ test('Smart Resolve returns non promise value', function(assert) {
 test('Smart Resolve returns unresolved Ember Promise Proxy mixin', function(assert) {
   assert.expect(1);
 
-  let deferred = Ember.RSVP.defer();
+  let deferred = defer();
   let promiseObject = DS.PromiseObject.create({ promise: deferred.promise });
 
   let returnValue = smartResolve(promiseObject);
@@ -29,7 +29,7 @@ test('Smart Resolve returns unresolved Ember Promise Proxy mixin', function(asse
 test('Smart Resolve returns unresolved RSVP Promise', function(assert) {
   assert.expect(1);
 
-  let deferred = Ember.RSVP.defer();
+  let deferred = defer();
 
   let returnValue = smartResolve(deferred.promise);
 
@@ -49,7 +49,7 @@ test('Smart Resolve returns Duck typed promise', function(assert) {
 test('Smart Resolve returns resolved Ember Promise Proxy mixin value', function(assert) {
   assert.expect(1);
 
-  let deferred = Ember.RSVP.defer();
+  let deferred = defer();
   let promiseObject = DS.PromiseObject.create({ promise: deferred.promise });
 
   deferred.resolve('done');
@@ -66,7 +66,7 @@ test('Smart Resolve returns resolved Ember Promise Proxy mixin value', function(
 test('Smart Resolve returns resolved RSVP Promise value', function(assert) {
   assert.expect(1);
 
-  let deferred = Ember.RSVP.defer();
+  let deferred = defer();
 
   deferred.resolve('done');
 

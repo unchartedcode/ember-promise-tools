@@ -1,4 +1,5 @@
-import Ember from 'ember';
+import { defer } from 'rsvp';
+import EmberObject from '@ember/object';
 import PromiseResolverMixin from 'ember-promise-tools/mixins/promise-resolver';
 import { module, test } from 'qunit';
 
@@ -7,7 +8,7 @@ module('Unit | Mixin | promise resolver');
 // Replace this with your real tests.
 test('it works', function(assert) {
   assert.expect(1);
-  let PromiseResolverObject = Ember.Object.extend(PromiseResolverMixin);
+  let PromiseResolverObject = EmberObject.extend(PromiseResolverMixin);
   let subject = PromiseResolverObject.create();
   assert.ok(subject);
 });
@@ -15,9 +16,9 @@ test('it works', function(assert) {
 test('resolves null until the promise is resolved', function (assert) {
   assert.expect(3);
 
-  let deferred = Ember.RSVP.defer();
+  let deferred = defer();
 
-  let PromiseResolverObject = Ember.Object.extend(PromiseResolverMixin);
+  let PromiseResolverObject = EmberObject.extend(PromiseResolverMixin);
   let subject = PromiseResolverObject.create();
 
   let resultImmediate = null;
@@ -40,10 +41,10 @@ test('resolves null until the promise is resolved', function (assert) {
 test('resolves null until the promise is rejected', function (assert) {
   assert.expect(4);
 
-  let deferred = Ember.RSVP.defer();
-  let deferredCatcher = Ember.RSVP.defer();
+  let deferred = defer();
+  let deferredCatcher = defer();
 
-  let PromiseResolverObject = Ember.Object.extend(PromiseResolverMixin);
+  let PromiseResolverObject = EmberObject.extend(PromiseResolverMixin);
   let subject = PromiseResolverObject.create();
 
   let resultImmediate = null;
@@ -75,15 +76,15 @@ test('resolves null until the promise is rejected', function (assert) {
 test('changing the promise changes the eventually resolved value', function (assert) {
   assert.expect(6);
 
-  let deferred1 = Ember.RSVP.defer();
-  let deferred2 = Ember.RSVP.defer();
+  let deferred1 = defer();
+  let deferred2 = defer();
 
   const deferred1Text = 'hi';
   const deferred2Text = 'bye';
 
   deferred1.resolve(deferred1Text);
 
-  let PromiseResolverObject = Ember.Object.extend(PromiseResolverMixin);
+  let PromiseResolverObject = EmberObject.extend(PromiseResolverMixin);
   let subject = PromiseResolverObject.create();
 
   let resultImmediate = null;
@@ -108,13 +109,13 @@ test('changing the promise changes the eventually resolved value', function (ass
 test('always resolves with the last promise set', function (assert) {
   assert.expect(6);
 
-  let deferred1 = Ember.RSVP.defer();
-  let deferred2 = Ember.RSVP.defer();
+  let deferred1 = defer();
+  let deferred2 = defer();
 
   const deferred1Text = 'hi';
   const deferred2Text = 'bye';
 
-  let PromiseResolverObject = Ember.Object.extend(PromiseResolverMixin);
+  let PromiseResolverObject = EmberObject.extend(PromiseResolverMixin);
   let subject = PromiseResolverObject.create();
 
   let resultImmediate = null;
@@ -142,7 +143,7 @@ test('always resolves with the last promise set', function (assert) {
 test('passes through non-promise values unchanged', function (assert) {
   assert.expect(3);
 
-  let PromiseResolverObject = Ember.Object.extend(PromiseResolverMixin);
+  let PromiseResolverObject = EmberObject.extend(PromiseResolverMixin);
   let subject = PromiseResolverObject.create();
 
   let resultImmediate = null;
@@ -155,9 +156,9 @@ test('passes through non-promise values unchanged', function (assert) {
 test('switching from promise to non-promise correctly ignores promise resolution', function (assert) {
   assert.expect(4);
 
-  let deferred = Ember.RSVP.defer();
+  let deferred = defer();
 
-  let PromiseResolverObject = Ember.Object.extend(PromiseResolverMixin);
+  let PromiseResolverObject = EmberObject.extend(PromiseResolverMixin);
   let subject = PromiseResolverObject.create();
 
   let resultImmediate = null;
@@ -184,10 +185,10 @@ test('previously fullfilled promise right away', function (assert) {
 
   const text = 'yass!';
 
-  let deferred = Ember.RSVP.defer();
+  let deferred = defer();
   deferred.resolve(text);
 
-  let PromiseResolverObject = Ember.Object.extend(PromiseResolverMixin);
+  let PromiseResolverObject = EmberObject.extend(PromiseResolverMixin);
   let subject = PromiseResolverObject.create();
 
   let resultImmediate = null;
@@ -211,9 +212,9 @@ test('if delayed function isnt passed in, uses immediate function', function (as
 
   const text = 'yass!';
 
-  let deferred = Ember.RSVP.defer();
+  let deferred = defer();
 
-  let PromiseResolverObject = Ember.Object.extend(PromiseResolverMixin);
+  let PromiseResolverObject = EmberObject.extend(PromiseResolverMixin);
   let subject = PromiseResolverObject.create();
 
   let resultImmediate = null;

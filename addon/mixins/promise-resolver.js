@@ -1,10 +1,11 @@
-import Ember from 'ember';
+import { Promise } from 'rsvp';
+import Mixin from '@ember/object/mixin';
 import isPromise from 'ember-promise-tools/utils/is-promise';
 import isFulfilled from 'ember-promise-tools/utils/is-fulfilled';
 import getPromiseContent from 'ember-promise-tools/utils/get-promise-content';
 
 // Code referenced from https://github.com/fivetanley/ember-promise-helpers
-export default Ember.Mixin.create({
+export default Mixin.create({
   resolvePromise(maybePromise, immediateResolve, delayedResolve, catchResolve) {
     if (!isPromise(maybePromise)) {
       this.clearPromise();
@@ -37,8 +38,8 @@ export default Ember.Mixin.create({
         if (catchResolve != null) {
           return catchResolve.call(this, error);
         } else {
-          Ember.Logger.error('Promise died in promise-resolver and no catchResolve method was passed in.');
-          Ember.Logger.error(error);
+          this.log_error('Promise died in promise-resolver and no catchResolve method was passed in.');
+          this.log_error(error);
         }
       });
     });
@@ -47,12 +48,20 @@ export default Ember.Mixin.create({
 
   ensureLatestPromise(promise, callback) {
     this.clearPromise(promise);
-    callback.call(this, Ember.RSVP.Promise.resolve(promise));
+    callback.call(this, Promise.resolve(promise));
   },
 
   clearPromise(promise = null) {
     // It's a new promise, reset
     this._promiseWasSettled = false;
     this._currentPromise = promise;
+  },
+
+  log_error(message) {
+    if (window.console && window.console.error) {
+      window.console.error(message);
+    } else {
+      // Do nothing, not supported by browser
+    }
   }
 });
